@@ -1,0 +1,35 @@
+body {
+    background: #f5d467;
+}
+
+#honeyDisplay {
+    font-size: 2em;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    text-align: center;
+}
+
+#leftSide {
+    left:0px;
+    width:30%;
+    position: absolute;
+}
+
+#middleSide {
+    left:30%;
+    width:30%;
+    position: absolute;
+}
+
+#rightSide {
+    left:60%;
+    width:40%;
+    position: absolute;
+}
+
+#BerryBeeBenson{
+    width:60%;
+    height:60%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
