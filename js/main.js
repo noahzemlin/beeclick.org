@@ -30,6 +30,7 @@ class GameClass {
         if (Game.honey >= Game.upgrades[name].price) {
             Game.honey -= Game.upgrades[name].price;
             Game.upgrades[name].count += 1;
+            Game.upgrades[name].price = Math.ceil(Game.upgrades[name].count * 1.05 * Game.upgrades[name].price);
             updateHoneyDisplay();
         }
     }
