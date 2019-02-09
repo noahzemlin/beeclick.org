@@ -5,6 +5,7 @@ class GameClass {
         this.upgrades = [];
         this.availableUpgrades = [];
         this.ownedUpgrades = [];
+        this.upgradesChanged = false;
     }
 
     clicky() {
@@ -20,8 +21,8 @@ class GameClass {
             x = Game.upgrades[x];
             console.log("checking " + x)
             if (Game.honey >= x.availablePrice && Game.availableUpgrades.indexOf(x.name) < 0) {
-                console.log("Pushing " + x.name)
                 Game.availableUpgrades.push(x.name)
+                this.upgradesChanged = true;
             }
         }
     }
@@ -30,6 +31,7 @@ class GameClass {
         if (Game.honey >= Game.upgrades[name].price) {
             Game.honey -= Game.upgrades[name].price;
             Game.upgrades[name].count += 1;
+            this.upgradesChanged = true;
             updateHoneyDisplay();
         }
     }
@@ -54,17 +56,18 @@ function updateHoneyDisplay() {
     $("#honeyDisplay").text("Honey: " + Math.round(Game.honey));
     Game.checkForAvailableUpgrades();
 
-    var tableStr = "";
-    for (var upgradeindex in Game.availableUpgrades) {
-        console.log("Getting " + upgradeindex);
-        var upgrade = Game.upgrades[Game.availableUpgrades[upgradeindex]];
-        console.log("Found " + upgrade);
-        
-        tableStr += "<tr>"
-            +"<td><div class='upgrade' onclick='Game.buyUpgrade(\"" + upgrade.name + "\")' style='background-position: -" + upgrade.spritePos[0] * 48 + "px -" +  + upgrade.spritePos[1] * 48 + "px;'></div></td>"
-            +"<td>" + upgrade.name + " (" + upgrade.count + ")</td>"
-            +"<td class='currency'>" + upgrade.price + "</td>"
-            +"</tr>";
+    if (Game.upgradesChanged){
+        Game.upgradesChanged = false;
+        var tableStr = "";
+        for (var upgradeindex in Game.availableUpgrades) {
+            var upgrade = Game.upgrades[Game.availableUpgrades[upgradeindex]];
+            
+            tableStr += "<tr>"
+                +"<td><div class='upgrade' onclick='Game.buyUpgrade(\"" + upgrade.name + "\")' style='background-position: -" + upgrade.spritePos[0] * 48 + "px -" +  + upgrade.spritePos[1] * 48 + "px;'></div></td>"
+                +"<td>" + upgrade.name + " (" + upgrade.count + ")</td>"
+                +"<td class='currency'>" + upgrade.price + "</td>"
+                +"</tr>";
+        }
     }
 
     $("#upgradesTable").html(tableStr);
