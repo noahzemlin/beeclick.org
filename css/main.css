@@ -126,6 +126,19 @@ body {
     position: absolute;
 }
 
+#resetButton{
+    position: absolute;
+    left:100px;
+    bottom:10px;
+}
+
+#resetButton a{
+    color:#000000;
+    text-decoration: none;
+    font-size:2em;
+    font-family: CustomFont, sans-serif;
+}
+
 #middleSide {
     right:30%;
     width:40%;
