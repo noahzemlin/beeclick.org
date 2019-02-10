@@ -64,8 +64,10 @@ class GameClass {
     }
 
     updatePrice(name) {
-        Game.upgrades[name].price = Math.ceil(Game.upgrades[name].baseprice * Math.pow(1.15, Game.upgrades[name].count));
-        this.upgradesChanged = true;
+        if (Game.upgrades[name].id <= 7) {
+            Game.upgrades[name].price = Math.ceil(Game.upgrades[name].baseprice * Math.pow(1.15, Game.upgrades[name].count));
+            this.upgradesChanged = true;
+        }
     }
 
     buyUpgrade(name) {
@@ -216,7 +218,7 @@ function updateDisplay() {
             $("#icons").css("background-position", "-512px 0px")
         }
 
-        if (Game.era == "Humane Farm") {
+        if (Game.upgrades[Game.era].id >= 6 && Game.upgrades[Game.era].id <= 8) {
             $("#icons").css("background-position", "-1024px 0px")
         }
 
@@ -225,10 +227,14 @@ function updateDisplay() {
             $("#icons").css("height", "320px");
         }
 
-
         if (Game.upgrades[Game.era].id <= 7) {
             $("#icons").css("height", Game.upgrades[Game.era].id * 64 + 64 + "px");
         }
+
+        if (Game.upgrades[Game.era].id == 8) {
+            $("#icons").css("height", "512px");
+        }
+
     }
 
     Game.checkForAvailableUpgrades();
