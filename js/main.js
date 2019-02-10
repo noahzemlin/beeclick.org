@@ -35,7 +35,8 @@ class GameClass {
         }
     }
 }
-var id = 0;
+
+var upgrade_id = 0;
 class Upgrade {
 
     constructor(name, desc, price, availablePrice, earnRate, spritePos) {
@@ -50,8 +51,24 @@ class Upgrade {
         this.count = 0;
         this.countshown = 0;
         this.showing = 0;
-        this.id = id;
-        id++;
+        this.id = upgrade_id;
+        upgrade_id++;
+    }
+
+}
+
+var enhancement_id = 0;
+class Enhancement {
+
+    constructor(name, desc, price, spritePos) {
+        this.name = name;
+        this.desc = desc;
+        this.price = price;
+        this.spritePos = spritePos;
+        Game.upgrades[name] = this;
+
+        this.id = enhancement_id;
+        enhancement_id++;
     }
 
 }
@@ -118,7 +135,7 @@ function updateDisplay() {
                 while (upgrade.countshown < upgrade.count) {
                     upgrade.countshown++;
                     var left = Math.random() * 3 - 1.5 + upgrade.countshown * 30 - 30;
-                    var top = 190 + Math.random() * 8 - 4 + upgrade.id * 60;
+                    var top = 5 + Math.random() * 8 - 4 + upgrade.id * 64;
                     $("#icons").append(
                         "<div class='upgradeFake' style='position:absolute; left: " + Math.round(left) + "px; top: " + Math.round(top) + "px; background-position: -" + upgrade.spritePos[0] * 48 + "px -" +  + upgrade.spritePos[1] * 48 + "px;'></div>"
                     )
@@ -127,18 +144,23 @@ function updateDisplay() {
         }
 
         if (upgrade.showing == 1) {
-            var tableStr = $("#upgradesTable").html();
-            tableStr += "<tr id='upgrade" + upgrade.id + "' style='color:#999;'>"
-                +"<td><div class='upgrade' onclick='Game.buyUpgrade(\"" + upgrade.name + "\")' style='background-position: -" + upgrade.spritePos[0] * 48 + "px -" +  + upgrade.spritePos[1] * 48 + "px;'></div></td>"
+            var newRow = $("<tr id='upgrade" + upgrade.id + "' style='color:#999;'>"
+                +"<td><div class='upgrade' title = \"" + upgrade.desc + "\" onclick='Game.buyUpgrade(\"" + upgrade.name + "\")' style='background-position: -" + upgrade.spritePos[0] * 48 + "px -" +  + upgrade.spritePos[1] * 48 + "px;'></div></td>"
                 +"<td id='upgradeCount" + upgrade.id + "'>" + upgrade.name + " (" + upgrade.count + ")</td>"
                 +"<td class='currency' id='upgradePrice" + upgrade.id + "'>" + upgrade.price + "</td>"
-                +"</tr>";
+                +"</tr>");
+
+            $("#upgradesTable").append(newRow);
             upgrade.showing = 2;
-            $("#upgradesTable").html(tableStr);
+
+            $("#upgradesTable tr *").qtip({
+                style: {
+                    classes: 'myTips'
+                }
+            })
         }
     }
 
-    $("#upgradesTable").html(tableStr);
 }
 
 
@@ -181,14 +203,14 @@ function factloop() {
 
 Game = new GameClass();
 // name, desc, price, availablePrice, earnRate, spritePos
-new Upgrade("Honeycomb", "Literally just honeycombs", 15, 1, 1, [0,0]);
-new Upgrade("Hive", "Buzz max", 100, 20, 5, [1,0]);
-new Upgrade("Apiary", "many buzz", 350, 150, 15, [2,0]);
-new Upgrade("Sanctuary", "many many many buzz", 1000, 400, 70, [3,0]);
-new Upgrade("Farm", "mega buzz", 2000, 1250, 150, [4,0]);
-new Upgrade("Synthetic Honey", "Omega buzz", 5000, 2250, 500, [5,0]);
-new Upgrade("Humane Farm", "Omega good buzz",20000 , 6250, 1000, [6,0]);
-new Upgrade("Super Factories", "Omega great buzz", 200000, 122500, 2500, [7,0]);
+new Upgrade("Honeycomb", "You're first couple of bees.", 15, 1, 1, [0,0]);
+new Upgrade("Hive", "Stop stealing their honey for a second and they'll make a hive.", 100, 20, 5, [1,0]);
+new Upgrade("Apiary", "You found out you can combine multiple hives into one to improve effeciency.", 350, 150, 15, [2,0]);
+new Upgrade("Sanctuary", "But what if we combined multiple apiaries together?", 1000, 400, 70, [3,0]);
+new Upgrade("Farm", "OK, now this is getting a bit far.", 2000, 1250, 150, [4,0]);
+new Upgrade("Synthetic Honey", "An amazing technological breakthrough allows you to create honey with the needs for bees at all.", 5000, 2250, 500, [5,0]);
+new Upgrade("Humane Farm", "By crushing old bees, you find that you can extract extra bits of honey out of them. RANDOMLY DESTROYS UPGRADES OF LOWER TIER THAN SYNTHETIC HONEY",20000 , 6250, 1000, [6,0]);
+new Upgrade("Super Factories", "These super factories completely elimate the need for bees. ALL UPGRADES ARE DISABLED OF LOWER TIER THAN SYNTHETIC HONEY", 200000, 122500, 2500, [7,0]);
 
 //Main
 $(document).ready(function(){
