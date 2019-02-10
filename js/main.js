@@ -5,6 +5,8 @@ class GameClass {
         this.upgrades = [];
         this.availableUpgrades = [];
         this.ownedUpgrades = [];
+        this.era = "Honeycomb";
+        this.eraChange = false;
     }
 
     clicky() {
@@ -31,6 +33,12 @@ class GameClass {
             Game.upgrades[name].count += 1;
             Game.upgrades[name].price = Math.ceil(Game.upgrades[name].price * 1.15 );
             this.upgradesChanged = true;
+
+            if (Game.upgrades[name].id > Game.upgrades[Game.era].id) {
+                Game.era = name;
+                Game.eraChange = true;
+            }
+
             updateDisplay();
         }
     }
@@ -117,6 +125,15 @@ function updateDisplay() {
         }
     });
 
+    if (Game.eraChange) {
+        Game.eraChange = false;
+        if (Game.era == "Synthetic Honey") {
+            $("#icons").css("background-position", "-512px 0px")
+        }
+        if (Game.era == "Humane Farm") {
+            $("#icons").css("background-position", "-1024px 0px")
+        }
+    }
 
     Game.checkForAvailableUpgrades();
 
@@ -191,10 +208,25 @@ function loop() {
 }
 
 function factloop() {
+    var eraToRead = "Facts";
+    
+    //Show something other than facts
+    if  (Math.random() > .6) {
+        if (Game.upgrades[Game.era].id <= 3) {
+            eraToRead = "pre-synth";
+        }
+        else if (Game.upgrades[Game.era].id == 4) {
+            eraToRead = "post-synth";
+        }
+        else {
+            eraToRead = "post-genocide";
+        }
+    }
+
     var factsHTML = $("#facts")
     factsHTML.fadeOut(500, 
         function() {
-            factsHTML.text(facts["Facts"][Math.floor(Math.random() * facts["Facts"].length)]);
+            factsHTML.text(facts[eraToRead][Math.floor(Math.random() * facts[eraToRead].length)]);
             factsHTML.fadeIn(500);
         });
 }
@@ -203,14 +235,14 @@ function factloop() {
 
 Game = new GameClass();
 // name, desc, price, availablePrice, earnRate, spritePos
-new Upgrade("Honeycomb", "You're first couple of bees.", 15, 1, 1, [0,0]);
-new Upgrade("Hive", "Stop stealing their honey for a second and they'll make a hive.", 100, 20, 5, [1,0]);
+new Upgrade("Honeycomb", "Your first couple of bees.", 15, 1, 1, [0,0]);
+new Upgrade("Hive", "Stop stealing their honey for a second and maybe they'll make a hive.", 100, 20, 5, [1,0]);
 new Upgrade("Apiary", "You found out you can combine multiple hives into one to improve effeciency.", 350, 150, 15, [2,0]);
 new Upgrade("Sanctuary", "But what if we combined multiple apiaries together?", 1000, 400, 70, [3,0]);
-new Upgrade("Farm", "OK, now this is getting a bit far.", 2000, 1250, 150, [4,0]);
-new Upgrade("Synthetic Honey", "An amazing technological breakthrough allows you to create honey with the needs for bees at all.", 5000, 2250, 500, [5,0]);
-new Upgrade("Humane Farm", "By crushing old bees, you find that you can extract extra bits of honey out of them. RANDOMLY DESTROYS UPGRADES OF LOWER TIER THAN SYNTHETIC HONEY",20000 , 6250, 1000, [6,0]);
-new Upgrade("Super Factories", "These super factories completely elimate the need for bees. ALL UPGRADES ARE DISABLED OF LOWER TIER THAN SYNTHETIC HONEY", 200000, 122500, 2500, [7,0]);
+new Upgrade("Farm", "OK, now this is going a bit far.", 2000, 1250, 150, [4,0]);
+new Upgrade("Synthetic Honey", "A = technological breakthrough allows you to create honey without the need for bees at all.", 5000, 2250, 500, [5,0]);
+new Upgrade("Humane Farm", "By crushing old bees, you find that you can extract extra bits of honey out of them.</br><b>Your old bee ways will be replaced with superior technology.</b>",20000 , 6250, 1000, [6,0]);
+new Upgrade("Super Factories", "These super factories completely elimate the need for bees.</br><b>Bees will no longer be needed for anything.</b>", 200000, 122500, 2500, [7,0]);
 
 //Main
 $(document).ready(function(){
