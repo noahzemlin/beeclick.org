@@ -139,6 +139,19 @@ body {
     font-family: CustomFont, sans-serif;
 }
 
+#cheatButton{
+    position: absolute;
+    left:400px;
+    bottom:10px;
+}
+
+#cheatButton a{
+    color:#000000;
+    text-decoration: none;
+    font-size:2em;
+    font-family: CustomFont, sans-serif;
+}
+
 #middleSide {
     right:30%;
     width:40%;

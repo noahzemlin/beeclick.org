@@ -56,7 +56,7 @@ class GameClass {
             return false;
         }
 
-        if (Game.honey > upgrade.price) {
+        if (Game.honey >= upgrade.price) {
             return true;
         }
 
