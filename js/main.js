@@ -14,6 +14,9 @@ class GameClass {
     }
 
     addHoney(honey) {
+        if (Game.era == "Beetopia") {
+            honey = honey * 10;
+        }
         this.honey += honey;
     }
 
@@ -27,8 +30,26 @@ class GameClass {
         }
     }
 
+    getUpgradePurchasable(name) {
+        var upgrade = Game.upgrades[name];
+
+        if (upgrade.id < 5 && Game.era == "Super Factories") {
+            return false;
+        }
+
+        if (upgrade.id >= 5 && upgrade.id <= 7 && Game.upgrades[Game.era].id >= Game.upgrades["Dont lose your way"].id) {
+            return false;
+        }
+
+        if (Game.honey > upgrade.price) {
+            return true;
+        }
+
+        return false;
+    }
+
     buyUpgrade(name) {
-        if (Game.honey >= Game.upgrades[name].price) {
+        if (Game.getUpgradePurchasable(name) && Game.honey >= Game.upgrades[name].price) {
             Game.honey -= Game.upgrades[name].price;
             Game.upgrades[name].count += 1;
             Game.upgrades[name].price = Math.ceil(Game.upgrades[name].price * 1.15 );
@@ -37,6 +58,35 @@ class GameClass {
             if (Game.upgrades[name].id > Game.upgrades[Game.era].id) {
                 Game.era = name;
                 Game.eraChange = true;
+            }
+
+            if (Game.upgrades[name].id == 6) {
+                for (var upgradeindex in Game.upgrades) {
+                    var upgrade = Game.upgrades[upgradeindex];
+                    if (upgrade.id <= 4 && Math.random() > 0.5) {
+                        if (upgrade.count > 0) {
+                            upgrade.count--;
+                        }
+                    }
+                }
+            }
+
+            if (Game.upgrades[name].id == 7) {
+                for (var upgradeindex in Game.upgrades) {
+                    var upgrade = Game.upgrades[upgradeindex];
+                    if (upgrade.id <= 4) {
+                        upgrade.count = 0;
+                    }
+                }
+            }
+
+            if (Game.upgrades[name].id == 8) {
+                for (var upgradeindex in Game.upgrades) {
+                    var upgrade = Game.upgrades[upgradeindex];
+                    if (upgrade.id >= 5 && upgrade.id<=7) {
+                        upgrade.count = 0;
+                    }
+                }
             }
 
             updateDisplay();
@@ -60,6 +110,7 @@ class Upgrade {
         this.countshown = 0;
         this.showing = 0;
         this.id = upgrade_id;
+        this.purchasable = true;
         upgrade_id++;
     }
 
@@ -81,8 +132,8 @@ class Enhancement {
 
 }
 
+//From the cookie clicker source code
 var formatLong=[' thousand',' million',' billion',' trillion',' quadrillion',' quintillion',' sextillion',' septillion',' octillion',' nonillion'];
-
 function formatEveryThirdPower(notations)
 {
 	return function (value)
@@ -141,14 +192,15 @@ function updateDisplay() {
         var upgrade = Game.upgrades[upgradeindex];
         var upgradehtml = $("#upgrade"+upgrade.id)
         if (upgrade.showing == 2) {
-            if (Game.honey < upgrade.price) {
+            //if we can buy
+            if (!Game.getUpgradePurchasable(upgradeindex)) { //if (Game.honey < upgrade.price && if ()) {
                 upgradehtml.attr("style", "color:#999;")
             }else{
                 upgradehtml.attr("style", "")
             }
             upgradehtml.find("#upgradeCount"+upgrade.id).text(upgrade.name + " (" + upgrade.count + ")");
-            upgradehtml.find("#upgradePrice"+upgrade.id).text(upgrade.price);
-            if (upgrade.countshown < upgrade.count) {
+            upgradehtml.find("#upgradePrice"+upgrade.id).text(Number(upgrade.price).toLocaleString());
+            if (upgrade.countshown < upgrade.count && upgrade.id <= 7) { //upgrade.id <= 7 to exclude redemption arc
                 while (upgrade.countshown < upgrade.count) {
                     upgrade.countshown++;
                     var left = Math.random() * 3 - 1.5 + upgrade.countshown * 30 - 30;
@@ -164,7 +216,7 @@ function updateDisplay() {
             var newRow = $("<tr id='upgrade" + upgrade.id + "' style='color:#999;'>"
                 +"<td><div class='upgrade' title = \"" + upgrade.desc + "\" onclick='Game.buyUpgrade(\"" + upgrade.name + "\")' style='background-position: -" + upgrade.spritePos[0] * 48 + "px -" +  + upgrade.spritePos[1] * 48 + "px;'></div></td>"
                 +"<td id='upgradeCount" + upgrade.id + "'>" + upgrade.name + " (" + upgrade.count + ")</td>"
-                +"<td class='currency' id='upgradePrice" + upgrade.id + "'>" + upgrade.price + "</td>"
+                +"<td class='currency' id='upgradePrice" + upgrade.id + "'>" + Number(upgrade.price).toLocaleString() + "</td>"
                 +"</tr>");
 
             $("#upgradesTable").append(newRow);
@@ -173,6 +225,10 @@ function updateDisplay() {
             $("#upgradesTable tr *").qtip({
                 style: {
                     classes: 'myTips'
+                },
+                position: {
+                    my: 'bottom right',  // Position my top left...
+                    at: 'top left', // at the bottom right of...
                 }
             })
         }
@@ -212,10 +268,10 @@ function factloop() {
     
     //Show something other than facts
     if  (Math.random() > .6) {
-        if (Game.upgrades[Game.era].id <= 3) {
+        if (Game.upgrades[Game.era].id <= 3 || Game.upgrades[Game.era].id>=9) {
             eraToRead = "pre-synth";
         }
-        else if (Game.upgrades[Game.era].id == 4) {
+        else if (Game.upgrades[Game.era].id == 4 || Game.upgrades[Game.era].id==8) {
             eraToRead = "post-synth";
         }
         else {
@@ -240,9 +296,11 @@ new Upgrade("Hive", "Stop stealing their honey for a second and maybe they'll ma
 new Upgrade("Apiary", "You found out you can combine multiple hives into one to improve effeciency.", 350, 150, 15, [2,0]);
 new Upgrade("Sanctuary", "But what if we combined multiple apiaries together?", 1000, 400, 70, [3,0]);
 new Upgrade("Farm", "OK, now this is going a bit far.", 2000, 1250, 150, [4,0]);
-new Upgrade("Synthetic Honey", "A = technological breakthrough allows you to create honey without the need for bees at all.", 5000, 2250, 500, [5,0]);
+new Upgrade("Synthetic Honey", "A technological breakthrough allows you to create honey without the need for bees at all.", 5000, 2250, 500, [5,0]);
 new Upgrade("Humane Farm", "By crushing old bees, you find that you can extract extra bits of honey out of them.</br><b>Your old bee ways will be replaced with superior technology.</b>",20000 , 6250, 1000, [6,0]);
 new Upgrade("Super Factories", "These super factories completely elimate the need for bees.</br><b>Bees will no longer be needed for anything.</b>", 200000, 122500, 2500, [7,0]);
+new Upgrade("Dont lose your way", "On the brink of world collapse, you find a few remaining bees in one of your Humane Farms.</br><b>You can bring them back, but you'll have to destroy your synthetic progress</b>", 10, 1000000, 0, [0,0]);
+new Upgrade("Beetopia", "The bees are back, and they love you. The grass is green, and things are good.</br><b>You notice that the bees are producing more than ever before.</b>", 10000000, 5000000, 0, [0,1]);
 
 //Main
 $(document).ready(function(){
