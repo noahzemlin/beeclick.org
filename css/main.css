@@ -1,3 +1,5 @@
+@font-face { font-family: CustomFont; src: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; } 
+
 body {
     overflow-y: hidden ! important;
     overflow-x: hidden ! important;
@@ -15,8 +17,14 @@ body {
     background-image: url(../img/bee-clicker-upgrades.png);
 }
 
+.upgradeFake{
+    width:48px;
+    height:48px;
+    background-image: url(../img/bee-clicker-upgrades.png);
+}
+
 #upgradesTable{
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-family: CustomFont, sans-serif;
     font-size: 1.6em;
     text-shadow:
     -1px -1px 0 #444,  
@@ -29,7 +37,7 @@ body {
 #upgradesHeader{
     text-align:center;
     font-size: 2em;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-family: CustomFont, sans-serif;
     text-shadow:
     -1px -1px 0 #444,  
      1px -1px 0 #444,
@@ -62,15 +70,18 @@ body {
 }
 
 #honeyDisplay {
-    font-size: 3em;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 4em;
+    font-family: CustomFont, sans-serif;
     color: #ffffff;
+    
     text-shadow:
     -1px -1px 0 #444,  
      1px -1px 0 #444,
      -1px 1px 0 #444,
       1px 1px 0 #444;
+      
     text-align: center;
+    padding: 5px;
 }
 
 #facts{
@@ -79,7 +90,7 @@ body {
     color: #ffffff;
     font-size:1.1em;
     background: #7e6d38;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-family: CustomFont, sans-serif;
     padding:20px;
 }
 
@@ -115,7 +126,7 @@ body {
     left:30%;
     bottom:10px;
     position: absolute;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-family: CustomFont, sans-serif;
     color: #ffffff;
     font-size:1.4em;
 }

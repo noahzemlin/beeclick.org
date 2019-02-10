@@ -56,6 +56,36 @@ class Upgrade {
 
 }
 
+var formatLong=[' thousand',' million',' billion',' trillion',' quadrillion',' quintillion',' sextillion',' septillion',' octillion',' nonillion'];
+
+function formatEveryThirdPower(notations)
+{
+	return function (value)
+	{
+		var base = 0,
+		notationValue = '';
+		if (!isFinite(value)) return 'Infinity';
+		if (value >= 1000000)
+		{
+			value /= 1000;
+			while(Math.round(value) >= 1000)
+			{
+				value /= 1000;
+				base++;
+			}
+			if (base >= notations.length) {return 'Infinity';} else {notationValue = notations[base];}
+		} else {
+            return value.toLocaleString();
+        }
+		return ( Math.round(value * 10000) / 10000 ) + notationValue;
+	};
+}
+
+function beautifyHoney(value) {
+    value = Math.round(value);
+    return formatEveryThirdPower(formatLong)(value);
+}
+
 var lastHoneyValue = 0
 var newHoneyValue = 0;
 function updateDisplay() {
@@ -66,7 +96,7 @@ function updateDisplay() {
         duration: 200,
         step: function(now, fx) {
             //$("div").append(now + "<br />");
-            $("#honeyDisplay").text(Math.round(now) + " drop" + (Game.honey == 1 ? "" : "s") + " of honey");
+            $("#honeyDisplay").html(beautifyHoney(now) + " drop" + (Game.honey == 1 ? "" : "s") + " of honey");
         }
     });
 
@@ -90,7 +120,7 @@ function updateDisplay() {
                     var left = Math.random() * 3 - 1.5 + upgrade.countshown * 30 - 30;
                     var top = 190 + Math.random() * 8 - 4 + upgrade.id * 60;
                     $("#icons").append(
-                        "<div class='upgrade' style='position:absolute; left: " + Math.round(left) + "px; top: " + Math.round(top) + "px; background-position: -" + upgrade.spritePos[0] * 48 + "px -" +  + upgrade.spritePos[1] * 48 + "px;'></div>"
+                        "<div class='upgradeFake' style='position:absolute; left: " + Math.round(left) + "px; top: " + Math.round(top) + "px; background-position: -" + upgrade.spritePos[0] * 48 + "px -" +  + upgrade.spritePos[1] * 48 + "px;'></div>"
                     )
                 }
             }
