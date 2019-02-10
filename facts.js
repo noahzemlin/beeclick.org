@@ -1,7 +1,6 @@
-{
-"Facts" : [
+facts = {"Facts" : [
 "There are three kinds of bees in a hive: Queen, Worker and Drone.",
-"Only the Queen in the hive lays eggs. She communicates with her hive with her own special scent called pheromones. The queen will lay around 1,500 eggs per day."
+"Only the Queen in the hive lays eggs. She communicates with her hive with her own special scent called pheromones. The queen will lay around 1,500 eggs per day.",
 "The worker bees are all female and they do all the work for the hive. Workers perform the following tasks inside the hive as a House Bee: Cleaning, feeding the baby bees, feeding and taking care of the queen, packing pollen and nectar into cells, capping cells, building and repairing honeycombs, fanning to cool the hive and guarding the hive.",
 "Workers perform the following tasks outside the hive as Field Bees: Gathering nectar and pollen from flowers, collecting water and a sticky substance called propolis.",
 "Bees will never love you. They don't care about you", 
@@ -9,31 +8,31 @@
 "If a worker bee uses her stinger, she will die.", 
 "Bees are classified as insects and they have six legs.", 
 "Bees have five eyes - two compound eyes and three tiny ocelli eyes.", 
-"According to all known laws of aviation, there is no way that a bee should be able to fly. Its wings are too small to get its fat little body off the ground. The bee, of course, flies anyway. Because bees don’t care what humans think is impossible.",
+"According to all known laws of aviation, there is no way that a bee should be able to fly. Its wings are too small to get its fat little body off the ground. The bee, of course, flies anyway. Because bees don't care what humans think is impossible.",
 "Bees go through four stages of development: Egg, Larvae, Pupae and Adult Bee.",
-"The bees use their honeycomb cells to raise their babies in, and to store nectar, honey, pollen and water." 
+"The bees use their honeycomb cells to raise their babies in, and to store nectar, honey, pollen and water.",
 "Bees like Jazz",
 "The practice of beekeeping dates back at least 4,500 years",
 "Approximately one third of the food we eat is the result of honey bee pollination",
-"In their 6-8 week lifespan, a worker bee will fly the equivalent distance of 1 ½ times the circumference of the Earth.",
+"In their 6-8 week lifespan, a worker bee will fly the equivalent distance of 1 times the circumference of the Earth.",
 "A productive queen can lay up to 2,500 eggs per day.",
-"Mead, which is made from fermented honey, is the world’s oldest fermented beverage.",
+"Mead, which is made from fermented honey, is the world's oldest fermented beverage.",
 "A single bee will produce only about 1/12 of a teaspoon of honey in its lifetime.",
 "Bees are attracted by caffeine.",
 "The perfect hexagons that form honeycomb hold the most amount of honey with the smallest amount of material (wax).",
 "Honey bees are the only insect that produces food consumed by humans.",
 "During a single collection trip, a honey bee will visit anywhere from 50 to 100 flowers.",
-"Honey bees beat their wings 200 times per second, creating their trademark “buzz”.",
+"Honey bees beat their wings 200 times per second, creating their trademark 'buzz'.",
 "Though bees have jointed legs, they do not possess anything like a kneecap, and therefore do not have knees.",
 "There are three types of bees in every hive: a queen, worker bees, and drones.",
 "Only drones are male.",
 "In order to make a pound of honey, a hive of bees must fly 55,000 miles",
-"Honey bees don’t sleep. Instead, they spend their nights motionless, conserving energy for the next day’s activities.",
-"The honey bee is the official insect of Maine.",
-"Honey was found in King Tut’s tomb, and, because it never spoils, it was still good!",
+"Honey bees don't sleep. Instead, they spend their nights motionless, conserving energy for the next day's activities.",
+"The bee is the official insect of Oklahoma.",
+"Honey was found in King Tut's tomb, and, because it never spoils, it was still good!",
 "Honey is the only known source of the antioxidant pinocembrin.",
 "On average, Americans consume 1.31 pounds of honey every year.",
-"A queen goes on what is called a “mating flight” where she leaves the hive and mates with anywhere from 5 to 45 different drones. She stores the sperm in her spermatheca, and has a lifetime supply, therefore only needing to take 1 mating flight in her lifetime.",
+"A queen goes on what is called a 'mating flight' where she leaves the hive and mates with anywhere from 5 to 45 different drones. She stores the sperm in her spermatheca, and has a lifetime supply, therefore only needing to take 1 mating flight in her lifetime.",
 "Honey bees are not born knowing how to make honey. Instead, they are taught in the hive by older bees.",
 "There are estimated to be nearly 212,000 beekeepers in the United States.",
 "Honey is 25% sweeter than table sugar.",
@@ -42,25 +41,25 @@
 "Drones die after mating with a queen.",
 "A single hive can produce anywhere from 60 to 100 pounds of honey every year.",
 "The ancient Greeks and Romans viewed honey as a symbol of love, beauty, and fertility.",
-"There are people in Africa that keep elephants out of their fields by keeping honey bee hives around the fields in what is called a “bee fence.”",
+"There are people in Africa that keep elephants out of their fields by keeping honey bee hives around the fields in what is called a 'bee fence.'",
 "In Greek mythology, Apollo is credited as being the first beekeeper.",
 "Ancient peoples used to believe that bees were created from the carcasses of dead animals.",
 "In ancient Egypt, people paid their taxes with honey.",
 "The ancient Greeks minted coins with bees on them.",
 "Beeswax is found in many of our everyday products, including furniture polishes, cosmetics, and medicines.",
-"The name ‘Melissa’ is derived from the Greek word for honey bee.",
+"The name 'Melissa' is derived from the Greek word for honey bee.",
 "Beekeeping is said to be the second oldest professions.",
 "Every species of bee performs their communication dances differently.",
 "The darker the honey, the greater amount of antioxidant properties it has.",
 "Bees can be trained to locate buried land mines.",
-"Ounce for ounce, honey bee venom is more deadly than cobra venom. Don’t worry, though – it takes 19 stings for every kilogram of a person’s body weight to be lethal.",
+"Ounce for ounce, honey bee venom is more deadly than cobra venom. Don't worry, though, it takes 19 stings for every kilogram of a person's body weight to be lethal.",
 "The first Anglo-Saxons drank beer made from water and honeycomb, with herbs for flavoring.",
-"The word “honeymoon” is derived from the ancient tradition of supplying a newlywed couple with a month’s supply of mead in order to ensure happiness and fertility.",
+"The word 'honeymoon' is derived from the ancient tradition of supplying a newlywed couple with a month's supply of mead in order to ensure happiness and fertility.",
 "While a worker bee will die after it stings, a queen can survive stinging.",
 "Worker bees have barbed stingers, while a queen has a smooth stinger, which she mostly uses to kill other queens.",
 "The Magna Carta legalized the harvesting of wild honey by common folk."
 
-]
+],
 
 "pre-synth" : [
 "Your bees are happy",
@@ -79,8 +78,8 @@
 "Your bees are progressive", 
 "Woman marries bee",
 "Barry Benson runs for president",
-"Dog in costume mistaken for bee",
-]
+"Dog in costume mistaken for bee"
+],
 
 "post-synth" : [
 "Bees are growing angry",
@@ -92,9 +91,9 @@
 "Several species are going excint",
 "Synthetic honey producers offer no comments about declining bee population",
 "Bees are dying slowly", 
-"Bee related marriages are outlawed.",
+"Bee related marriages are outlawed."
 
-]
+],
 
 "post-genocide" : [
 "Several species of flowers are now extinct",
@@ -104,5 +103,5 @@
 "Humanity is dying",
 "Scientists belive extinction of bees to impact the earth permanently",
 "Massive wildlife extinction",
-"Humanity is on brink of war",
-]
+"Humanity is on brink of war"
+]}

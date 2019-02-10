@@ -7,17 +7,21 @@
     <title>Bee Clicker</title>
     <link rel="stylesheet" href="css/main.css" />
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="facts.js"></script>
     <script src="js/main.js"></script>
 </head>
 <body>
     <div id="leftSide">
-        <div id="honeyDisplay">Honey: 0</div>
-        <img id="BerryBeeBenson" src="img/bee1.png"></img>
+        <div id="honeyDisplay">0 drops of Honey</div>
+        <img id="BerryBeeBenson" src="img/bee.gif"></img>
     </div>
     <div id="middleSide">
-        This is on the middle side
+        <div id="facts"></div>
+        <div id="icons"></div>
     </div>
     <div id="rightSide">
+        <div id="upgradesHeader">Upgrades</div>
+        <hr>
         <table id="upgradesTable">
             <!--<tr>
                 <td><div class="upgrade" onclick="Game.BuyUpgrade[0]" style="background-position: 0px -48px;"></div></td>
@@ -25,9 +29,6 @@
                 <td class="currency">50</td>
             </tr>-->
         </table>
-    </div>
-    <div id ="bottomSide">
-            Please stop killing the bees!
     </div>
 </body>
 </html>

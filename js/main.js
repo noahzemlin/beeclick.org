@@ -5,7 +5,6 @@ class GameClass {
         this.upgrades = [];
         this.availableUpgrades = [];
         this.ownedUpgrades = [];
-        this.upgradesChanged = false;
     }
 
     clicky() {
@@ -19,10 +18,9 @@ class GameClass {
     checkForAvailableUpgrades() {
         for (var x in Game.upgrades) {
             x = Game.upgrades[x];
-            console.log("checking " + x)
             if (Game.honey >= x.availablePrice && Game.availableUpgrades.indexOf(x.name) < 0) {
                 Game.availableUpgrades.push(x.name)
-                this.upgradesChanged = true;
+                Game.upgrades[x.name].showing = 1;
             }
         }
     }
@@ -33,12 +31,13 @@ class GameClass {
             Game.upgrades[name].count += 1;
             Game.upgrades[name].price = Math.ceil(Game.upgrades[name].price * 1.15 );
             this.upgradesChanged = true;
-            updateHoneyDisplay();
+            updateDisplay();
         }
     }
 }
-
+var id = 0;
 class Upgrade {
+
     constructor(name, desc, price, availablePrice, earnRate, spritePos) {
         this.name = name;
         this.desc = desc;
@@ -49,25 +48,63 @@ class Upgrade {
         Game.upgrades[name] = this;
 
         this.count = 0;
+        this.countshown = 0;
+        this.showing = 0;
+        this.id = id;
+        id++;
     }
 
 }
 
-function updateHoneyDisplay() {
-    $("#honeyDisplay").text("Honey: " + Math.round(Game.honey));
+var lastHoneyValue = 0
+var newHoneyValue = 0;
+function updateDisplay() {
+    //Nice honey lerp
+    lastHoneyValue = newHoneyValue;
+    newHoneyValue = Game.honey;
+    $({ n: lastHoneyValue }).animate({ n: newHoneyValue}, {
+        duration: 200,
+        step: function(now, fx) {
+            //$("div").append(now + "<br />");
+            $("#honeyDisplay").text(Math.round(now) + " drop" + (Game.honey == 1 ? "" : "s") + " of honey");
+        }
+    });
+
+
     Game.checkForAvailableUpgrades();
 
-    if (Game.upgradesChanged){
-        Game.upgradesChanged = false;
-        var tableStr = "";
-        for (var upgradeindex in Game.availableUpgrades) {
-            var upgrade = Game.upgrades[Game.availableUpgrades[upgradeindex]];
-            
-            tableStr += "<tr>"
+    for (var upgradeindex in Game.upgrades) {
+        var upgrade = Game.upgrades[upgradeindex];
+        var upgradehtml = $("#upgrade"+upgrade.id)
+        if (upgrade.showing == 2) {
+            if (Game.honey < upgrade.price) {
+                upgradehtml.attr("style", "color:#999;")
+            }else{
+                upgradehtml.attr("style", "")
+            }
+            upgradehtml.find("#upgradeCount"+upgrade.id).text(upgrade.name + " (" + upgrade.count + ")");
+            upgradehtml.find("#upgradePrice"+upgrade.id).text(upgrade.price);
+            if (upgrade.countshown < upgrade.count) {
+                while (upgrade.countshown < upgrade.count) {
+                    upgrade.countshown++;
+                    var left = Math.random() * 3 - 1.5 + upgrade.countshown * 30 - 30;
+                    var top = 190 + Math.random() * 8 - 4 + upgrade.id * 60;
+                    $("#icons").append(
+                        "<div class='upgrade' style='position:absolute; left: " + Math.round(left) + "px; top: " + Math.round(top) + "px; background-position: -" + upgrade.spritePos[0] * 48 + "px -" +  + upgrade.spritePos[1] * 48 + "px;'></div>"
+                    )
+                }
+            }
+        }
+
+        if (upgrade.showing == 1) {
+            var tableStr = $("#upgradesTable").html();
+            tableStr += "<tr id='upgrade" + upgrade.id + "' style='color:#999;'>"
                 +"<td><div class='upgrade' onclick='Game.buyUpgrade(\"" + upgrade.name + "\")' style='background-position: -" + upgrade.spritePos[0] * 48 + "px -" +  + upgrade.spritePos[1] * 48 + "px;'></div></td>"
-                +"<td>" + upgrade.name + " (" + upgrade.count + ")</td>"
-                +"<td class='currency'>" + upgrade.price + "</td>"
+                +"<td id='upgradeCount" + upgrade.id + "'>" + upgrade.name + " (" + upgrade.count + ")</td>"
+                +"<td class='currency' id='upgradePrice" + upgrade.id + "'>" + upgrade.price + "</td>"
                 +"</tr>";
+            upgrade.showing = 2;
+            $("#upgradesTable").html(tableStr);
         }
     }
 
@@ -85,15 +122,11 @@ function setupBigBee() {
         function(){
             $(this).animate({width: "70%", height:"70%"}, 50, "swing", $(this).animate({width: "80%", height:"80%"}, 50));
             Game.clicky();
-            updateHoneyDisplay();
+            updateDisplay();
         }
     );
 }
 
-function buzz() {
-    $("#BerryBeeBenson").attr("src","img/bee2.png");
-    setTimeout(function(){$("#BerryBeeBenson").attr("src","img/bee1.png");}, 200);
-}
 
 function loop() {
     var honeyToAdd = 0;
@@ -102,7 +135,16 @@ function loop() {
         honeyToAdd += upgrade.earnRate * upgrade.count;
     }
     Game.addHoney(honeyToAdd/5.0);
-    updateHoneyDisplay();
+    updateDisplay();
+}
+
+function factloop() {
+    var factsHTML = $("#facts")
+    factsHTML.fadeOut(500, 
+        function() {
+            factsHTML.text(facts["Facts"][Math.floor(Math.random() * facts["Facts"].length)]);
+            factsHTML.fadeIn(500);
+        });
 }
 
 //Pre-main
@@ -121,7 +163,8 @@ new Upgrade("Super Factories", "Omega great buzz", 200000, 122500, 2500, [7,0]);
 //Main
 $(document).ready(function(){
     setupBigBee();
+    factloop()
 
     GlobalTimer=setInterval(loop,200);
-    BuzzTimer=setInterval(buzz,5000);
+    FactTimer=setInterval(factloop,8000);
 });

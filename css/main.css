@@ -17,7 +17,19 @@ body {
 
 #upgradesTable{
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 1.6em;
+    text-shadow:
+    -1px -1px 0 #444,  
+     1px -1px 0 #444,
+     -1px 1px 0 #444,
+      1px 1px 0 #444;
+    color: #ffffff;
+}
+
+#upgradesHeader{
+    text-align:center;
     font-size: 2em;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     text-shadow:
     -1px -1px 0 #444,  
      1px -1px 0 #444,
@@ -61,6 +73,23 @@ body {
     text-align: center;
 }
 
+#facts{
+    width: 90%;
+    height: 30%;
+    color: #ffffff;
+    font-size:1.1em;
+    background: #7e6d38;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    padding:20px;
+}
+
+#icons {
+    min-height:90%;
+    width:90%;
+    padding:20px;
+    margin-top:10px;
+}
+
 #leftSide {
     left:0px;
     width:33%;
@@ -75,14 +104,20 @@ body {
 
 #rightSide {
     left:67%;
-    width:33%;
+    width:29%;
+    height:90%;
     position: absolute;
+    background: #7e6d38;
+    padding:20px;
 }
 
 #bottomSide {
-    left:50%;
-    top: 97%;
+    left:30%;
+    bottom:10px;
     position: absolute;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: #ffffff;
+    font-size:1.4em;
 }
 
 #BerryBeeBenson{
@@ -95,17 +130,17 @@ body {
 
 .currency {
     font-weight: bold;
-    padding-left: 18px;
+    padding-left: 30px;
     position: relative;
 }
 
-.currency::after {
+.currency::before {
     content: '';
     display: block;
     position: absolute;
-    right: -40px;
-    top: 10px;
-    background: url(../img/currency.png);
-    width: 32px;
-    height: 32px;
+    left:10px;
+    top: 12px;
+    background: url(../img/currency.png) no-repeat;
+    width: 16px;
+    height: 25px;
 }
