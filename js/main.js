@@ -7,6 +7,8 @@ class GameClass {
         this.ownedUpgrades = [];
         this.era = "Honeycomb";
         this.eraChange = false;
+
+        this.clickmultiplier = 0;
     }
 
     clicky() {
@@ -204,9 +206,16 @@ function updateDisplay() {
         if (Game.era == "Synthetic Honey") {
             $("#icons").css("background-position", "-512px 0px")
         }
+
         if (Game.era == "Humane Farm") {
             $("#icons").css("background-position", "-1024px 0px")
         }
+
+        if (Game.era == "Beetopia") {
+            $("#icons").css("background-position", "0px 0px")
+            $("#icons").css("height", "320px");
+        }
+
 
         if (Game.upgrades[Game.era].id <= 7) {
             $("#icons").css("height", Game.upgrades[Game.era].id * 64 + 64 + "px");
@@ -294,6 +303,19 @@ function loop() {
     updateDisplay();
 }
 
+function readSave() {
+    if(localStorage.key("save")) {
+        Game.honey = Number(localStorage.getItem("honey"));
+        Game.era = localStorage.getItem("era");
+        for (x in Game.upgrades) {
+            Game.upgrades[x].count = Number(localStorage.getItem(x));
+        }
+
+        Game.eraChange = true;
+        updateDisplay();
+    }
+}
+
 function factloop() {
     var eraToRead = "Facts";
     
@@ -316,6 +338,13 @@ function factloop() {
             factsHTML.text(facts[eraToRead][Math.floor(Math.random() * facts[eraToRead].length)]);
             factsHTML.fadeIn(500);
         });
+
+    localStorage.setItem("save", true);
+    localStorage.setItem("honey", Game.honey);
+    localStorage.setItem("era", Game.era);
+    for (x in Game.upgrades) {
+        localStorage.setItem(x, Game.upgrades[x].count);
+    }
 }
 
 //Pre-main
@@ -335,7 +364,9 @@ new Upgrade("Beetopia", "The bees are back, and they love you. The grass is gree
 
 //Main
 $(document).ready(function(){
+
     setupBigBee();
+    readSave();
     factloop()
 
     GlobalTimer=setInterval(loop,200);
