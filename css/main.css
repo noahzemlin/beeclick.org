@@ -79,6 +79,12 @@ body {
     position: absolute;
 }
 
+#bottomSide {
+    left:50%;
+    top: 97%;
+    position: absolute;
+}
+
 #BerryBeeBenson{
     width:60%;
     height:60%;

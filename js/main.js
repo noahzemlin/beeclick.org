@@ -108,12 +108,15 @@ function loop() {
 //Pre-main
 
 Game = new GameClass();
-
+// name, desc, price, availablePrice, earnRate, spritePos
 new Upgrade("Honeycomb", "Literally just honeycombs", 15, 1, 1, [0,0]);
-new Upgrade("Hive", "Buzz max", 50, 40, 5, [1,0]);
-new Upgrade("Apiary", "many buzz", 100, 80, 15, [2,0]);
-new Upgrade("Sanctuary", "many many many buzz", 200, 180, 30, [3,0]);
-new Upgrade("Farm", "mega buzz", 500, 450, 50, [4,0]);
+new Upgrade("Hive", "Buzz max", 100, 20, 5, [1,0]);
+new Upgrade("Apiary", "many buzz", 350, 150, 15, [2,0]);
+new Upgrade("Sanctuary", "many many many buzz", 1000, 400, 70, [3,0]);
+new Upgrade("Farm", "mega buzz", 2000, 1250, 150, [4,0]);
+new Upgrade("Synthetic Honey", "Omega buzz", 5000, 2250, 500, [5,0]);
+new Upgrade("Humane Farm", "Omega good buzz",20000 , 6250, 1000, [6,0]);
+new Upgrade("Super Factories", "Omega great buzz", 200000, 122500, 2500, [7,0]);
 
 //Main
 $(document).ready(function(){
