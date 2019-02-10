@@ -10,12 +10,17 @@ class GameClass {
     }
 
     clicky() {
-        this.honey += 1;
+        if (Game.era == "Beetopia") {
+            this.honey += 100
+        }
+        else {
+            this.honey += 1;
+        }
     }
 
     addHoney(honey) {
         if (Game.era == "Beetopia") {
-            honey = honey * 10;
+            honey = honey * 100;
         }
         this.honey += honey;
     }
@@ -38,6 +43,14 @@ class GameClass {
         }
 
         if (upgrade.id >= 5 && upgrade.id <= 7 && Game.upgrades[Game.era].id >= Game.upgrades["Dont lose your way"].id) {
+            return false;
+        }
+
+        if (upgrade.id >= 8 && upgrade.count > 0) {
+            return false;
+        }
+
+        if (Game.upgrades[Game.era].id < upgrade.id - 1) {
             return false;
         }
 
@@ -65,7 +78,9 @@ class GameClass {
                     var upgrade = Game.upgrades[upgradeindex];
                     if (upgrade.id <= 4 && Math.random() > 0.5) {
                         if (upgrade.count > 0) {
+                            $("#upgradeFake"+upgrade.id+""+upgrade.count).remove();
                             upgrade.count--;
+                            upgrade.countshown--;
                         }
                     }
                 }
@@ -75,7 +90,11 @@ class GameClass {
                 for (var upgradeindex in Game.upgrades) {
                     var upgrade = Game.upgrades[upgradeindex];
                     if (upgrade.id <= 4) {
-                        upgrade.count = 0;
+                        while (upgrade.count > 0) {
+                            $("#upgradeFake"+upgrade.id+""+upgrade.count).remove();
+                            upgrade.count--;
+                            upgrade.countshown--;
+                        }
                     }
                 }
             }
@@ -84,7 +103,11 @@ class GameClass {
                 for (var upgradeindex in Game.upgrades) {
                     var upgrade = Game.upgrades[upgradeindex];
                     if (upgrade.id >= 5 && upgrade.id<=7) {
-                        upgrade.count = 0;
+                        while (upgrade.count > 0) {
+                            $("#upgradeFake"+upgrade.id+""+upgrade.count).remove();
+                            upgrade.count--;
+                            upgrade.countshown--;
+                        }
                     }
                 }
             }
@@ -153,7 +176,7 @@ function formatEveryThirdPower(notations)
 		} else {
             return value.toLocaleString();
         }
-		return ( Math.round(value * 10000) / 10000 ) + notationValue;
+		return ( Math.round(value * 1000) / 1000 ) + notationValue;
 	};
 }
 
@@ -184,6 +207,10 @@ function updateDisplay() {
         if (Game.era == "Humane Farm") {
             $("#icons").css("background-position", "-1024px 0px")
         }
+
+        if (Game.upgrades[Game.era].id <= 7) {
+            $("#icons").css("height", Game.upgrades[Game.era].id * 64 + 64 + "px");
+        }
     }
 
     Game.checkForAvailableUpgrades();
@@ -198,7 +225,11 @@ function updateDisplay() {
             }else{
                 upgradehtml.attr("style", "")
             }
-            upgradehtml.find("#upgradeCount"+upgrade.id).text(upgrade.name + " (" + upgrade.count + ")");
+            if (upgrade.id >= 8) {
+                upgradehtml.find("#upgradeCount"+upgrade.id).text(upgrade.name);
+            } else {
+                upgradehtml.find("#upgradeCount"+upgrade.id).text(upgrade.name + " (" + upgrade.count + ")");
+            }
             upgradehtml.find("#upgradePrice"+upgrade.id).text(Number(upgrade.price).toLocaleString());
             if (upgrade.countshown < upgrade.count && upgrade.id <= 7) { //upgrade.id <= 7 to exclude redemption arc
                 while (upgrade.countshown < upgrade.count) {
@@ -206,7 +237,7 @@ function updateDisplay() {
                     var left = Math.random() * 3 - 1.5 + upgrade.countshown * 30 - 30;
                     var top = 5 + Math.random() * 8 - 4 + upgrade.id * 64;
                     $("#icons").append(
-                        "<div class='upgradeFake' style='position:absolute; left: " + Math.round(left) + "px; top: " + Math.round(top) + "px; background-position: -" + upgrade.spritePos[0] * 48 + "px -" +  + upgrade.spritePos[1] * 48 + "px;'></div>"
+                        "<div class='upgradeFake' id='upgradeFake" + upgrade.id +"" + upgrade.count + "' style='position:absolute; left: " + Math.round(left) + "px; top: " + Math.round(top) + "px; background-position: -" + upgrade.spritePos[0] * 48 + "px -" +  + upgrade.spritePos[1] * 48 + "px;'></div>"
                     )
                 }
             }
@@ -299,8 +330,8 @@ new Upgrade("Farm", "OK, now this is going a bit far.", 2000, 1250, 150, [4,0]);
 new Upgrade("Synthetic Honey", "A technological breakthrough allows you to create honey without the need for bees at all.", 5000, 2250, 500, [5,0]);
 new Upgrade("Humane Farm", "By crushing old bees, you find that you can extract extra bits of honey out of them.</br><b>Your old bee ways will be replaced with superior technology.</b>",20000 , 6250, 1000, [6,0]);
 new Upgrade("Super Factories", "These super factories completely elimate the need for bees.</br><b>Bees will no longer be needed for anything.</b>", 200000, 122500, 2500, [7,0]);
-new Upgrade("Dont lose your way", "On the brink of world collapse, you find a few remaining bees in one of your Humane Farms.</br><b>You can bring them back, but you'll have to destroy your synthetic progress</b>", 10, 1000000, 0, [0,0]);
-new Upgrade("Beetopia", "The bees are back, and they love you. The grass is green, and things are good.</br><b>You notice that the bees are producing more than ever before.</b>", 10000000, 5000000, 0, [0,1]);
+new Upgrade("Dont lose your way", "On the brink of world collapse, you find a few remaining bees in one of your Humane Farms.</br><b>You can bring them back, but you'll have to destroy your synthetic progress</b>", 10, 1000000, 0, [8,0]);
+new Upgrade("Beetopia", "The bees are back, and they love you. The grass is green, and things are good.</br><b>You notice that the bees are producing more than ever before.</b>", 10000000, 5000000, 0, [9,0]);
 
 //Main
 $(document).ready(function(){

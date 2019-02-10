@@ -23,6 +23,12 @@ body {
     background-image: url(../img/bee-clicker-upgrades.png);
 }
 
+#octocat {
+    position: absolute;
+    left:10px;
+    bottom:10px;
+}
+
 .myTips{
     background: #ffd58a;
     border:0px;
@@ -107,7 +113,7 @@ body {
 #icons {
     margin-top:10px;
     width:512px;
-    height:512px;
+    height:64px;
     position: absolute;
     background: url("../img/bee-clicker-backgrounds.png") no-repeat;
     border: 2px solid black;
