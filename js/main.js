@@ -63,11 +63,16 @@ class GameClass {
         return false;
     }
 
+    updatePrice(name) {
+        Game.upgrades[name].price = Math.ceil(Game.upgrades[name].baseprice * Math.pow(1.15, Game.upgrades[name].count));
+        this.upgradesChanged = true;
+    }
+
     buyUpgrade(name) {
         if (Game.getUpgradePurchasable(name) && Game.honey >= Game.upgrades[name].price) {
             Game.honey -= Game.upgrades[name].price;
             Game.upgrades[name].count += 1;
-            Game.upgrades[name].price = Math.ceil(Game.upgrades[name].price * 1.15 );
+            Game.updatePrice(name);            
             this.upgradesChanged = true;
 
             if (Game.upgrades[name].id > Game.upgrades[Game.era].id) {
@@ -83,6 +88,7 @@ class GameClass {
                             $("#upgradeFake"+upgrade.id+""+upgrade.count).remove();
                             upgrade.count--;
                             upgrade.countshown--;
+                            Game.updatePrice(upgradeindex);
                         }
                     }
                 }
@@ -97,6 +103,7 @@ class GameClass {
                             upgrade.count--;
                             upgrade.countshown--;
                         }
+                        Game.updatePrice(upgradeindex);
                     }
                 }
             }
@@ -110,6 +117,7 @@ class GameClass {
                             upgrade.count--;
                             upgrade.countshown--;
                         }
+                        Game.updatePrice(upgradeindex);
                     }
                 }
             }
@@ -126,6 +134,7 @@ class Upgrade {
         this.name = name;
         this.desc = desc;
         this.price = price;
+        this.baseprice = price;
         this.availablePrice = availablePrice;
         this.earnRate = earnRate;
         this.spritePos = spritePos;
@@ -287,7 +296,7 @@ function setupBigBee() {
         function(){
             $(this).animate({width: "70%", height:"70%"}, 50, "swing", $(this).animate({width: "80%", height:"80%"}, 50));
             Game.clicky();
-            updateDisplay();
+            //updateDisplay();
         }
     );
 }
@@ -357,7 +366,7 @@ new Upgrade("Apiary", "You found out you can combine multiple hives into one to 
 new Upgrade("Sanctuary", "But what if we combined multiple apiaries together?", 1000, 400, 70, [3,0]);
 new Upgrade("Farm", "OK, now this is going a bit far.", 2000, 1250, 150, [4,0]);
 new Upgrade("Synthetic Honey", "A technological breakthrough allows you to create honey without the need for bees at all.", 5000, 2250, 500, [5,0]);
-new Upgrade("Humane Farm", "By crushing old bees, you find that you can extract extra bits of honey out of them.</br><b>Your old bee ways will be replaced with superior technology.</b>",20000 , 6250, 1000, [6,0]);
+new Upgrade("Humane Farm", "By crushing old bees, you find that you can extract extra bits of honey out of them.</br><b>Your old bee ways will be replaced with superior technology.</b>",20000 , 12500, 1000, [6,0]);
 new Upgrade("Super Factories", "These super factories completely elimate the need for bees.</br><b>Bees will no longer be needed for anything.</b>", 200000, 122500, 2500, [7,0]);
 new Upgrade("Dont lose your way", "On the brink of world collapse, you find a few remaining bees in one of your Humane Farms.</br><b>You can bring them back, but you'll have to destroy your synthetic progress</b>", 10, 1000000, 0, [8,0]);
 new Upgrade("Beetopia", "The bees are back, and they love you. The grass is green, and things are good.</br><b>You notice that the bees are producing more than ever before.</b>", 10000000, 5000000, 0, [9,0]);
