@@ -331,6 +331,13 @@ function readSave() {
     }
 }
 
+function resetProgress() {
+    if (confirm("Reset all progress?")) {
+        localStorage.clear();
+        location.reload();
+    }
+}
+
 function factloop() {
     var eraToRead = "Facts";
     
