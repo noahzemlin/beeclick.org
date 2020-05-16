@@ -8,16 +8,12 @@ class GameClass {
         this.era = "Honeycomb";
         this.eraChange = false;
 
-        this.clickmultiplier = 0;
+        this.clickMultiplier = 1;
+        this.ready = false;
     }
 
     clicky() {
-        if (Game.era == "Beetopia") {
-            this.honey += 100
-        }
-        else {
-            this.honey += 1;
-        }
+        this.honey += this.clickMultiplier;
     }
 
     addHoney(honey) {
@@ -31,6 +27,9 @@ class GameClass {
         for (var x in Game.upgrades) {
             x = Game.upgrades[x];
             if (Game.honey >= x.availablePrice && Game.availableUpgrades.indexOf(x.name) < 0) {
+                // only make an upgrade available if we have:
+                // - passed the honey threshold to unlock it, and
+                // - it isn't already available
                 Game.availableUpgrades.push(x.name)
                 Game.upgrades[x.name].showing = 1;
             }
@@ -40,23 +39,30 @@ class GameClass {
     getUpgradePurchasable(name) {
         var upgrade = Game.upgrades[name];
 
-        if (upgrade.id < 5 && Game.era == "Super Factories") {
+        if (upgrade.id < 5 && Game.era == "Super Factory") {
+            // in this era, bees are dead. "Honeycomb"--"Farm" can't be bought
             return false;
         }
 
-        if (upgrade.id >= 5 && upgrade.id <= 7 && Game.upgrades[Game.era].id >= Game.upgrades["Dont lose your way"].id) {
+        if (upgrade.id >= 5 && upgrade.id <= 7 && Game.upgrades[Game.era].id >= Game.upgrades["Dont Lose Your Way"].id) {
+            // after destroying synthetic processes to bring the bees back, "Synthetic Honey"--"Factories" can't be bought
             return false;
         }
 
         if (upgrade.id >= 8 && upgrade.count > 0) {
+            // "Dont Lose Your Way" and "Beetopia" can each only be bought once
             return false;
         }
 
         if (Game.upgrades[Game.era].id < upgrade.id - 1) {
+            // era names are also upgrade names, so we can use it as such for index checking.
+            // can't skip an upgrade. must go in order to advance era
+            // e.g., can't get "Apiary" if we are at "Honeycomb" (have not bought a "Hive")
             return false;
         }
 
         if (Game.honey >= upgrade.price) {
+            // can only buy upgrades we can afford
             return true;
         }
 
@@ -64,6 +70,7 @@ class GameClass {
     }
 
     updatePrice(name) {
+        // all upgrades that can be purchased more than once become 15% more expensive for each one that you already have
         if (Game.upgrades[name].id <= 7) {
             Game.upgrades[name].price = Math.ceil(Game.upgrades[name].baseprice * Math.pow(1.15, Game.upgrades[name].count));
             this.upgradesChanged = true;
@@ -72,56 +79,63 @@ class GameClass {
 
     buyUpgrade(name) {
         if (Game.getUpgradePurchasable(name) && Game.honey >= Game.upgrades[name].price) {
+            // can only buy things that are purchasable and that we can afford (redundant)
             Game.honey -= Game.upgrades[name].price;
             Game.upgrades[name].count += 1;
             Game.updatePrice(name);            
-            this.upgradesChanged = true;
+            this.upgradesChanged = true; //probably redundant
 
             if (Game.upgrades[name].id > Game.upgrades[Game.era].id) {
+                // advance era to most recently bought upgrade
                 Game.era = name;
                 Game.eraChange = true;
             }
 
-            if (Game.upgrades[name].id == 6) {
-                for (var upgradeindex in Game.upgrades) {
-                    var upgrade = Game.upgrades[upgradeindex];
+            if (Game.upgrades[name].id == 6) { // buying a "Humane Farm"
+                // lose some random bee-related upgrades
+                for (var upgradeIndex in Game.upgrades) {
+                    var upgrade = Game.upgrades[upgradeIndex];
                     if (upgrade.id <= 4 && Math.random() > 0.5) {
                         if (upgrade.count > 0) {
                             $("#upgradeFake"+upgrade.id+""+upgrade.count).remove();
                             upgrade.count--;
                             upgrade.countshown--;
-                            Game.updatePrice(upgradeindex);
+                            Game.updatePrice(upgradeIndex);
                         }
                     }
                 }
             }
-
-            if (Game.upgrades[name].id == 7) {
-                for (var upgradeindex in Game.upgrades) {
-                    var upgrade = Game.upgrades[upgradeindex];
+            else if (Game.upgrades[name].id == 7) { // buying a "Super Factory"
+                // lose all bee-related upgrades
+                for (var upgradeIndex in Game.upgrades) {
+                    var upgrade = Game.upgrades[upgradeIndex];
                     if (upgrade.id <= 4) {
                         while (upgrade.count > 0) {
                             $("#upgradeFake"+upgrade.id+""+upgrade.count).remove();
                             upgrade.count--;
                             upgrade.countshown--;
                         }
-                        Game.updatePrice(upgradeindex);
+                        Game.updatePrice(upgradeIndex);
                     }
                 }
             }
-
-            if (Game.upgrades[name].id == 8) {
-                for (var upgradeindex in Game.upgrades) {
-                    var upgrade = Game.upgrades[upgradeindex];
+            else if (Game.upgrades[name].id == 8) { // buying "Dont Lose Your Way"
+                // lose all non-bee-related upgrades
+                for (var upgradeIndex in Game.upgrades) {
+                    var upgrade = Game.upgrades[upgradeIndex];
                     if (upgrade.id >= 5 && upgrade.id<=7) {
                         while (upgrade.count > 0) {
                             $("#upgradeFake"+upgrade.id+""+upgrade.count).remove();
                             upgrade.count--;
                             upgrade.countshown--;
                         }
-                        Game.updatePrice(upgradeindex);
+                        Game.updatePrice(upgradeIndex);
                     }
                 }
+            }
+            else if (Game.upgrades[name].id == 9) { // buying "Beetopia"
+                // set the click multiplier to 100
+                this.clickMultiplier = 100;
             }
 
             updateDisplay();
@@ -144,7 +158,7 @@ class Upgrade {
 
         this.count = 0;
         this.countshown = 0;
-        this.showing = 0;
+        this.showing = 0; //showing = 0 (not showing), 1 (needs to be added to the display), or 2 (already on the display)
         this.id = upgrade_id;
         this.purchasable = true;
         upgrade_id++;
@@ -194,6 +208,7 @@ function formatEveryThirdPower(notations)
 }
 
 function beautifyHoney(value) {
+    // represents total drops of honey in good notation using function above
     value = Math.round(value);
     return formatEveryThirdPower(formatLong)(value);
 }
@@ -201,7 +216,7 @@ function beautifyHoney(value) {
 var lastHoneyValue = 0
 var newHoneyValue = 0;
 function updateDisplay() {
-    //Nice honey lerp
+    // update total drops of honey displayed
     lastHoneyValue = newHoneyValue;
     newHoneyValue = Game.honey;
     $({ n: lastHoneyValue }).animate({ n: newHoneyValue}, {
@@ -212,6 +227,8 @@ function updateDisplay() {
         }
     });
 
+    // update the icon backgrounds depending on the era.
+    // each panel is 512px wide by 64px tall. 8 panels per background. 3 different backgrounds.
     if (Game.eraChange) {
         Game.eraChange = false;
         if (Game.era == "Synthetic Honey") {
@@ -219,6 +236,7 @@ function updateDisplay() {
         }
 
         if (Game.upgrades[Game.era].id >= 6 && Game.upgrades[Game.era].id <= 8) {
+            // "Humane Farm"--"Dont Lose Your Way"
             $("#icons").css("background-position", "-1024px 0px")
         }
 
@@ -228,6 +246,7 @@ function updateDisplay() {
         }
 
         if (Game.upgrades[Game.era].id <= 7) {
+            // only show background panels up to the current era (furthest upgrade)
             $("#icons").css("height", Game.upgrades[Game.era].id * 64 + 64 + "px");
         }
 
@@ -239,34 +258,48 @@ function updateDisplay() {
 
     Game.checkForAvailableUpgrades();
 
-    for (var upgradeindex in Game.upgrades) {
-        var upgrade = Game.upgrades[upgradeindex];
+    for (var upgradeIndex in Game.upgrades) {
+        var upgrade = Game.upgrades[upgradeIndex];
         var upgradehtml = $("#upgrade"+upgrade.id)
         if (upgrade.showing == 2) {
-            //if we can buy
-            if (!Game.getUpgradePurchasable(upgradeindex)) { //if (Game.honey < upgrade.price && if ()) {
+            // set text color depending if that upgrade can be bought currently
+            if (!Game.getUpgradePurchasable(upgradeIndex)) {
                 upgradehtml.attr("style", "color:#999;")
             }else{
                 upgradehtml.attr("style", "")
             }
+
+            // update displayed count of each upgrade
             if (upgrade.id >= 8) {
+                // these upgrades are each a one-time-purchase
                 upgradehtml.find("#upgradeCount"+upgrade.id).text(upgrade.name);
             } else {
+                // these upgrades can be purchased multiple times, so show how many we currently have
                 upgradehtml.find("#upgradeCount"+upgrade.id).text(upgrade.name + " (" + upgrade.count + ")");
             }
+
+            // update the displayed price of each upgrade
             upgradehtml.find("#upgradePrice"+upgrade.id).text(Number(upgrade.price).toLocaleString());
+
+            // add the upgrade sprite to the icons section in the middle
             if (upgrade.countshown < upgrade.count && upgrade.id <= 7) { //upgrade.id <= 7 to exclude redemption arc
                 while (upgrade.countshown < upgrade.count) {
                     upgrade.countshown++;
-                    var left = Math.random() * 3 - 1.5 + upgrade.countshown * 30 - 30;
-                    var top = 5 + Math.random() * 8 - 4 + upgrade.id * 64;
+                    // figure out how much space we have 
+                    var iconFrameWidth = screen.width * 0.3 * 0.9;
+                    // use some randomness so the icons are staggered as they appear left to right in their respective panel
+                    var left = Math.round(Math.random() * 3 - 1.5 + upgrade.countshown * 30 - 30) % (iconFrameWidth - 42);
+                    // % will loop the icons and keep them from going off the page to the right if a lot are bought.
+                    // (width of panel is 512px but each sprite is ~48px wide)
+                    var top = Math.round(5 + Math.random() * 8 - 4 + upgrade.id * 64);
                     $("#icons").append(
-                        "<div class='upgradeFake' id='upgradeFake" + upgrade.id +"" + upgrade.count + "' style='position:absolute; left: " + Math.round(left) + "px; top: " + Math.round(top) + "px; background-position: -" + upgrade.spritePos[0] * 48 + "px -" +  + upgrade.spritePos[1] * 48 + "px;'></div>"
+                        "<div class='upgradeFake' id='upgradeFake" + upgrade.id +"" + upgrade.count + "' style='position:absolute; left: " + left + "px; top: " + top + "px; background-position: -" + upgrade.spritePos[0] * 48 + "px -" +  + upgrade.spritePos[1] * 48 + "px;'></div>"
                     )
                 }
             }
         }
 
+        // add the upgrade as a displayed purchase option for the first time
         if (upgrade.showing == 1) {
             var newRow = $("<tr id='upgrade" + upgrade.id + "' style='color:#999;'>"
                 +"<td><div class='upgrade' title = \"" + upgrade.desc + "\" onclick='Game.buyUpgrade(\"" + upgrade.name + "\")' style='background-position: -" + upgrade.spritePos[0] * 48 + "px -" +  + upgrade.spritePos[1] * 48 + "px;'></div></td>"
@@ -293,11 +326,12 @@ function updateDisplay() {
 
 
 function setupBigBee() {
+    // make sprite bigger while mouse is hovering over it
     $("#BerryBeeBenson").hover(
         function(){$(this).animate({width: "70%", height:"70%"}, 100);},        
         function(){$(this).animate({width: "60%", height:"60%"}, 100);}
     );
-
+    // make sprite bigger when clicked, and call the clicky() function to add honey
     $("#BerryBeeBenson").click(
         function(){
             $(this).animate({width: "70%", height:"70%"}, 50, "swing", $(this).animate({width: "80%", height:"80%"}, 50));
@@ -307,8 +341,13 @@ function setupBigBee() {
     );
 }
 
-
+// runs on the global timer.
 function loop() {
+    // run the autoplay if it is enabled
+    if (runAutoplay) {
+        autoplay();
+    }
+    // add passive honey from all the upgrades.
     var honeyToAdd = 0;
     for (var x in Game.upgrades) {
         var upgrade = Game.upgrades[x];
@@ -318,6 +357,7 @@ function loop() {
     updateDisplay();
 }
 
+// restore data from saved cache (user can close and reopen and it won't reset)
 function readSave() {
     if(localStorage.key("save")) {
         Game.honey = Number(localStorage.getItem("honey"));
@@ -329,6 +369,7 @@ function readSave() {
         Game.eraChange = true;
         updateDisplay();
     }
+    Game.ready = true;
 }
 
 function resetProgress() {
@@ -341,7 +382,7 @@ function resetProgress() {
 function factloop() {
     var eraToRead = "Facts";
     
-    //Show something other than facts
+    // decide whether to show era-specific info other than neutral facts
     if  (Math.random() > .6) {
         if (Game.upgrades[Game.era].id <= 3 || Game.upgrades[Game.era].id>=9) {
             eraToRead = "pre-synth";
@@ -353,14 +394,14 @@ function factloop() {
             eraToRead = "post-genocide";
         }
     }
-
+    // randomly choose a fact to display
     var factsHTML = $("#facts")
     factsHTML.fadeOut(500, 
         function() {
             factsHTML.text(facts[eraToRead][Math.floor(Math.random() * facts[eraToRead].length)]);
             factsHTML.fadeIn(500);
         });
-
+    // backup game data localStorage
     localStorage.setItem("save", true);
     localStorage.setItem("honey", Game.honey);
     localStorage.setItem("era", Game.era);
@@ -369,7 +410,7 @@ function factloop() {
     }
 }
 
-//Pre-main
+//Pre-main: define Game and all the upgrades
 
 Game = new GameClass();
 // name, desc, price, availablePrice, earnRate, spritePos
@@ -380,9 +421,39 @@ new Upgrade("Sanctuary", "But what if we combined multiple apiaries together?", 
 new Upgrade("Farm", "OK, now this is going a bit far.", 2000, 1250, 150, [4,0]);
 new Upgrade("Synthetic Honey", "A technological breakthrough allows you to create honey without the need for bees at all.", 5000, 2250, 500, [5,0]);
 new Upgrade("Humane Farm", "By crushing old bees, you find that you can extract extra bits of honey out of them.</br><b>Your old bee ways will be replaced with superior technology.</b>",20000 , 12500, 1000, [6,0]);
-new Upgrade("Super Factories", "These super factories completely elimate the need for bees.</br><b>Bees will no longer be needed for anything.</b>", 200000, 122500, 2500, [7,0]);
-new Upgrade("Dont lose your way", "On the brink of world collapse, you find a few remaining bees in one of your Humane Farms.</br><b>You can bring them back, but you'll have to destroy your synthetic progress</b>", 10, 1000000, 0, [8,0]);
-new Upgrade("Beetopia", "The bees are back, and they love you. The grass is green, and things are good.</br><b>You notice that the bees are producing more than ever before.</b>", 10000000, 5000000, 0, [9,0]);
+new Upgrade("Super Factory", "These super factories completely elimate the need for bees.</br><b>Bees will no longer be needed for anything.</b>", 200000, 122500, 2500, [7,0]);
+new Upgrade("Dont Lose Your Way", "On the brink of world collapse, you find a few remaining bees in one of your Humane Farms.</br><b>You can bring them back, but you'll have to destroy your synthetic progress</b>", 10, 1000000, 0, [8,0]);
+new Upgrade("Beetopia", "The bees are back, and they love you.</br><b>You notice that the bees are producing more than ever before.</b>", 10000000, 5000000, 0, [9,0]);
+//NOTE: putting in the apostrophe in "Don't Lose Your Way" breaks everything. Leave it out.
+
+// setup hotkeys to control the game with the keyboard
+$(document).keypress(function() {
+    if (!Game.ready) { return; }
+
+    if (event.which == 13 || event.which == 32) {  // enter or spacebar
+        Game.clicky();
+    } else if (event.which == 48 || event.which == 96) { // 0 or numpad 0
+        Game.buyUpgrade("Honeycomb");
+    } else if (event.which == 49 || event.which == 97) { // 1
+        Game.buyUpgrade("Hive");
+    } else if (event.which == 50 || event.which == 98) { // 2
+        Game.buyUpgrade("Apiary");
+    } else if (event.which == 51 || event.which == 99) { // 3
+        Game.buyUpgrade("Sanctuary");
+    } else if (event.which == 52 || event.which == 100) { // 4
+        Game.buyUpgrade("Farm");
+    } else if (event.which == 53 || event.which == 101) { // 5
+        Game.buyUpgrade("Synthetic Honey");
+    } else if (event.which == 54 || event.which == 102) { // 6
+        Game.buyUpgrade("Humane Farm");
+    } else if (event.which == 55 || event.which == 103) { // 7
+        Game.buyUpgrade("Super Factory");
+    } else if (event.which == 56 || event.which == 104) { // 8
+        Game.buyUpgrade("Dont Lose Your Way");
+    } else if (event.which == 57 || event.which == 105) { // 9
+        Game.buyUpgrade("Beetopia");
+    }
+});
 
 //Main
 $(document).ready(function(){
@@ -392,5 +463,5 @@ $(document).ready(function(){
     factloop()
 
     GlobalTimer=setInterval(loop,200);
-    FactTimer=setInterval(factloop,8000);
+    FactTimer=setInterval(factloop,10000);
 });

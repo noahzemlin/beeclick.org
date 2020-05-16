@@ -61,23 +61,6 @@ body {
     color: #ffffff;
 }
 
-#sun {
-    height:256px;
-    width:146px;
-    bottom:0px;
-    right:0px;
-    position: absolute;
-    background: url("../img/sun.png") no-repeat;
-}
-
-#tree {
-    height:512px;
-    width:342px;
-    bottom:0px;
-    position: absolute;
-    background: url("../img/tree.png") no-repeat;
-}
-
 #BerryBeeBenson {
     width: 256px;
     height: 256px;
@@ -100,7 +83,7 @@ body {
 }
 
 #facts{
-    width: 90%;
+    width: 85%;
     height: 30%;
     color: #ffffff;
     font-size:1.1em;
@@ -112,7 +95,7 @@ body {
 
 #icons {
     margin-top:10px;
-    width:512px;
+    width:90%;
     height:64px;
     position: absolute;
     background: url("../img/bee-clicker-backgrounds.png") no-repeat;
@@ -141,12 +124,25 @@ body {
 
 #cheatButton{
     position: absolute;
-    left:400px;
+    left:225px;
     bottom:10px;
 }
 
 #cheatButton a{
-    color:#000000;
+    color:#5f0202;
+    text-decoration: none;
+    font-size:2em;
+    font-family: CustomFont, sans-serif;
+}
+
+#autoplayButton{
+    position: absolute;
+    left:350px;
+    bottom:10px;
+}
+
+#autoplayButton a{
+    color:#10025c;
     text-decoration: none;
     font-size:2em;
     font-family: CustomFont, sans-serif;
@@ -154,7 +150,7 @@ body {
 
 #middleSide {
     right:30%;
-    width:40%;
+    width:35%;
     position: absolute;
 }
 

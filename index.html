@@ -9,8 +9,9 @@
     <link rel="stylesheet" href="css/main.css" />
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/qtip2/3.0.3/basic/jquery.qtip.min.js"></script>
-    <script src="facts.js"></script>
+    <script src="js/facts.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/autoplay.js"></script>
 </head>
 <body>
     <div id="leftSide">
@@ -36,10 +37,13 @@
         <a href="https://github.com/noahzemlin/beeclick.org"><img src="img/GitHub-Mark-64px.png"></a>
     </div>
     <div id="resetButton">
-        <a href="#" onclick="resetProgress()">Reset Progress</a>
+        <a href="#" onclick="resetProgress()">Reset</a>
     </div>
-    <!--<div id="cheatButton">
+    <div id="cheatButton">
         <a href="#" onclick="Game.addHoney(1000000);">Cheat</a>
-    </div>-->
+    </div>
+    <div id="autoplayButton">
+        <a href="#" onclick="autoplayPress()">Autoplay</a>
+    </div>
 </body>
 </html>
